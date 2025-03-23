@@ -1,0 +1,7 @@
+#!/bin/sh -e
+#
+# Activate 802.15.4 / OpenThread on Variscite VAR-SOM-MX95
+#
+
+# Temporary disable OT service.
+exit 0
