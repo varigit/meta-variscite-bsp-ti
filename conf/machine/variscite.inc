@@ -19,7 +19,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	iw \
 	kernel-modules \
 	kmod \
-	networkmanager \
 	packagegroup-tools-bluetooth \
 	bluealsa \
 	pm-utils \
@@ -49,3 +48,20 @@ IMAGE_FSTYPES:remove = "tar.xz.md5"
 # Remove sysvinit or systemd based on DISTRO_FEATURES to avoid conflicts
 DISTRO_FEATURES_BACKFILL_CONSIDERED:append = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', ' sysvinit', '', d)}"
 DISTRO_FEATURES_BACKFILL_CONSIDERED:append = "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', ' systemd', '', d)}"
+
+NETMAN_PACKAGES = "\
+    networkmanager \
+    networkmanager-nmcli \
+"
+
+# Wayland distros should default to systemd-networkd
+PREFERRED_CONNECTIVITY_MANAGER = "systemd-networkd"
+PREFERRED_CONNECTIVITY_MANAGER_PACKAGES	?= " \
+    ${@bb.utils.contains('PREFERRED_CONNECTIVITY_MANAGER', 'networkmanager', \
+        '${NETMAN_PACKAGES}','', d)} \
+"
+
+CORE_IMAGE_EXTRA_INSTALL += " \
+    packagegroup-variscite-devel \
+    ${PREFERRED_CONNECTIVITY_MANAGER_PACKAGES} \
+"
