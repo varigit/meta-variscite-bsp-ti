@@ -65,3 +65,5 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     packagegroup-variscite-devel \
     ${PREFERRED_CONNECTIVITY_MANAGER_PACKAGES} \
 "
+
+BBMASK += "meta-tisdk/recipes-tisdk/tisdk-uenv/tisdk-uenv.bbappend"
