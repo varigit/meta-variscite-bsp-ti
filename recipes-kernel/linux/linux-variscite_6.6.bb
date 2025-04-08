@@ -7,6 +7,7 @@ inherit kernel
 
 DEFCONFIG_BUILDER = "${S}/ti_config_fragments/defconfig_builder.sh"
 require recipes-kernel/linux/setup-defconfig.inc
+
 require recipes-kernel/linux/ti-kernel.inc
 
 DEPENDS += "gmp-native libmpc-native"
@@ -16,21 +17,19 @@ KERNEL_EXTRA_ARGS += "LOADADDR=${UBOOT_ENTRYPOINT} \
 
 S = "${WORKDIR}/git"
 
-BRANCH = "ti-linux-6.1.y_09.02.01.10_var01"
-SRCREV = "055ead3d5359b960b239e27da486c8afff72494f"
-PV = "6.1.83+git${SRCPV}"
+BRANCH = "ti-linux-6.6.y_10.01.10.04_var01"
+SRCREV = "ec9d5af35344f41f0a7cdda3411b37386ab6b0f6"
+PV = "6.6.58+git"
 KBUILD_DEFCONFIG = "am62x_var_defconfig"
 
 # Do not put dtb in ti subdir
 KERNEL_DTBVENDORED = "0"
 
-# Append to the MACHINE_KERNEL_PR so that a new SRCREV will cause a rebuild
-MACHINE_KERNEL_PR:append = "b"
-PR = "${MACHINE_KERNEL_PR}"
-
 KERNEL_GIT_URI = "git://github.com/varigit/ti-linux-kernel"
 KERNEL_GIT_PROTOCOL = "https"
-SRC_URI += "${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};branch=${BRANCH}"
+SRC_URI = " \
+    ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};${KERNEL_GIT_BRANCH} \
+"
 
 FILES_${KERNEL_PACKAGE_NAME}-devicetree += "/${KERNEL_IMAGEDEST}/*.itb"
 
@@ -63,4 +62,4 @@ do_configure:prepend() {
 	fi
 }
 
-COMPATIBLE_MACHINE = "(am62x-var-som)"
+COMPATIBLE_MACHINE = "(am62x-var-som|am62px-var-som)"
