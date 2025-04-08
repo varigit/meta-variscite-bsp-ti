@@ -21,7 +21,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	kmod \
 	networkmanager \
 	packagegroup-tools-bluetooth \
-	packagegroup-var-hw-test \
 	bluealsa \
 	pm-utils \
 	rng-tools \
