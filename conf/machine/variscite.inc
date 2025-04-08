@@ -32,6 +32,15 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 		'u-boot-splash','', d)} \
 "
 
+MACHINE_FIRMWARE:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'nxpiw612-sdio', 'firmware-nxp-wifi-nxpiw612-sdio', '', d)}"
+MACHINE_EXTRA_RRECOMMENDS:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'nxpiw612-sdio', 'kernel-module-nxp-wlan', '', d)}"
+MACHINE_EXTRA_RRECOMMENDS:append = "${MACHINE_FIRMWARE}"
+PREFERRED_RPROVIDER_linux-firmware-nxpiw612-sdio = "firmware-nxp-wifi"
+
+MACHINE_EXTRA_RDEPENDS += " \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'nxpiw612-sdio', 'iw612-utils', '', d)} \
+"
+
 KERNEL_IMAGETYPES = "Image"
 IMAGE_FSTYPES = "wic.bmap wic.zst tar.zst"
 IMAGE_FSTYPES:remove = "tar.xz.md5"
