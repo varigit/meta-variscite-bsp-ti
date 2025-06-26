@@ -63,4 +63,21 @@ do_configure:prepend() {
 	fi
 }
 
+do_uboot_sign_fitimage() {
+	bbnote "Not signing fitImage. Not building for Secure Boot"
+}
+
+do_uboot_sign_fitimage:var-som-secureboot() {
+	kernel_uboot_fitimage_name=${B}/arch/${ARCH}/boot/fitImage
+	cd ${B}
+
+	# sign the final image
+	${UBOOT_MKIMAGE_SIGN} \
+		-F -k "${SIGN_KEYDIR}" \
+		-K ${UBOOT_DTB_BINARY} \
+		-r $kernel_uboot_fitimage_name
+}
+
+addtask do_uboot_sign_fitimage after do_assemble_fitimage before do_install
+
 COMPATIBLE_MACHINE = "(am62x-var-som)"
