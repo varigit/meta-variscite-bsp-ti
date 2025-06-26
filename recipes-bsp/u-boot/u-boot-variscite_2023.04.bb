@@ -14,3 +14,22 @@ SRCREV = "e8b424ab7754be09d56168cd504f29bd430839cb"
 COMPATIBLE_MACHINE = "(am62x-var-som)"
 
 inherit var-check-keydir
+
+python do_patch:var-som-secureboot:append() {
+    # This needs to be a Python function and not a bash function because we
+    # want to execute it for both Cortex A53 and Cortex R5 (multiconfig, mc).
+    # For the mc execution, we do not get full visibility of Yocto environment, e.g.
+    # cannot detect SIGN_KEYDIR. For Python functions, this is provided properly.
+
+    import os
+    import shutil
+    import glob
+
+    src_key_dir = d.getVar('SIGN_KEYDIR')
+
+    # cp ${SIGN_KEYDIR}/* ${S}/board/variscite/keys
+    dst_key_dir = os.path.join(d.getVar('S'), "board", "variscite", "keys")
+    for file_path in glob.glob(os.path.join(src_key_dir, "*")):
+        if os.path.isfile(file_path):
+            shutil.copy(file_path, dst_key_dir)
+}
