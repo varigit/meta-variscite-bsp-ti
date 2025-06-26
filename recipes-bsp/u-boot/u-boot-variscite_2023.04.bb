@@ -12,3 +12,5 @@ BRANCH = "ti-u-boot-2023.04_09.02.01.10_var01"
 SRCREV = "e8b424ab7754be09d56168cd504f29bd430839cb"
 
 COMPATIBLE_MACHINE = "(am62x-var-som)"
+
+inherit var-check-keydir
