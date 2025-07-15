@@ -48,20 +48,20 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/lib/firmware/ti-ipc/am62xx/
+    install -d ${D}${nonarch_base_libdir}/firmware/ti-ipc/am62xx/
 
     # Install all demos in CM_DEMOS
     for CM_DEMO in ${CM_DEMOS}; do
         DIR_ARMCLANG="${S}/examples/${CM_DEMO}/am62x-var-som/m4fss0-0_freertos/ti-arm-clang"
         # Install all build targets
         FILE_CM_FW="$(basename ${DIR_ARMCLANG}/*.release.strip.out)"
-        install -m 644 ${DIR_ARMCLANG}/${FILE_CM_FW} ${D}/lib/firmware/ti-ipc/am62xx/${FILE_CM_FW}
-        ln -sf "/lib/firmware/ti-ipc/am62xx/${FILE_CM_FW}" ${D}/lib/firmware/am62-mcu-m4f0_0-fw
+        install -m 644 ${DIR_ARMCLANG}/${FILE_CM_FW} ${D}${nonarch_base_libdir}/firmware/ti-ipc/am62xx/${FILE_CM_FW}
+        ln -sf "${nonarch_base_libdir}/firmware/ti-ipc/am62xx/${FILE_CM_FW}" ${D}/${nonarch_base_libdir}/firmware/am62-mcu-m4f0_0-fw
     done
 }
 
 FILES:${PN} = " \
-	/lib/firmware \
+    ${nonarch_base_libdir}/firmware \
 "
 
 INHIBIT_PACKAGE_STRIP = "1"
