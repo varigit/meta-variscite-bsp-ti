@@ -1,5 +1,5 @@
 require recipes-bsp/u-boot/u-boot-ti.inc
-FILESEXTRAPATHS:prepend:var-som:k3r5 := "${THISDIR}/${PN}/am62px-var-som:"
+FILESEXTRAPATHS:prepend:var-som:k3r5 := "${THISDIR}/${PN}/am62x-var-som: ${THISDIR}/${PN}/am62px-var-som:"
 
 LIC_FILES_CHKSUM = "file://Licenses/README;md5=2ca5f2c35c8cc335f0a19756634782f1"
 
@@ -8,8 +8,8 @@ SRC_URI += "file://fw_env.config"
 
 UBOOT_GIT_URI = "git://github.com/varigit/ti-u-boot"
 
-BRANCH = "ti-u-boot-2024.04_10.01.10.04_var01"
-SRCREV = "2ab10c6c073cbd997ea8d0baf2fe391bdf4489d2"
+BRANCH = "ti-u-boot-2025.01_11.00.09.04_var01"
+SRCREV = "7e23012d66fca1a154e9b1e5816371fdff5aa886"
 
 COMPATIBLE_MACHINE = "(am62x-var-som|am62px-var-som)"
 
