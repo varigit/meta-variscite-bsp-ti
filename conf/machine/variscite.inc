@@ -66,4 +66,4 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     ${PREFERRED_CONNECTIVITY_MANAGER_PACKAGES} \
 "
 
-BBMASK += "meta-tisdk/recipes-tisdk/tisdk-uenv/tisdk-uenv.bbappend"
+BBMASK += "meta-tisdk/meta-ti-foundational/recipes-tisdk/tisdk-uenv/tisdk-uenv.bbappend"
