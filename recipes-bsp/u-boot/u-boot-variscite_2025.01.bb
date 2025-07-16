@@ -34,7 +34,7 @@ python do_patch:var-som-secureboot:append() {
     src_key_dir = d.getVar('SIGN_KEYDIR')
 
     # cp ${SIGN_KEYDIR}/* ${S}/board/variscite/keys
-    dst_key_dir = os.path.join(d.getVar('S'), "board", "variscite", "keys")
+    dst_key_dir = os.path.join(d.getVar('S'), "arch", "arm", "mach-k3", "keys")
     for file_path in glob.glob(os.path.join(src_key_dir, "*")):
         if os.path.isfile(file_path):
             shutil.copy(file_path, dst_key_dir)
