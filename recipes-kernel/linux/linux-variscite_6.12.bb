@@ -1,6 +1,6 @@
 SECTION = "kernel"
 SUMMARY = "Linux kernel for Variscite devices"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 inherit kernel
@@ -17,16 +17,16 @@ KERNEL_EXTRA_ARGS += "LOADADDR=${UBOOT_ENTRYPOINT} \
 
 S = "${WORKDIR}/git"
 
-BRANCH = "ti-linux-6.6.y_10.01.10.04_var01"
-SRCREV = "2e8c5605ae5a3f0bb4e8a4903cc83866df4d3877"
-PV = "6.6.58+git"
+BRANCH = "ti-linux-6.12.y_11.00.09.04_var01"
+SRCREV = "c25eebdc20373e3b7cc853feb2dd2df5f04f4a71"
+PV = "6.12.17+git"
 KBUILD_DEFCONFIG = "am62x_var_defconfig"
 
 # Do not put dtb in ti subdir
 KERNEL_DTBVENDORED = "0"
 
 KERNEL_GIT_URI = "git://github.com/varigit/ti-linux-kernel"
-KERNEL_GIT_PROTOCOL = "https"
+
 SRC_URI = " \
     ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};${KERNEL_GIT_BRANCH} \
 "
