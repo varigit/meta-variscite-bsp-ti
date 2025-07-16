@@ -31,6 +31,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 		'u-boot-splash','', d)} \
 "
 
+# Extra NXP Wi-Fi and Bluetooth driver firmware and driver
 MACHINE_FIRMWARE:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'nxpiw612-sdio', 'firmware-nxp-wifi-nxpiw612-sdio', '', d)}"
 MACHINE_EXTRA_RRECOMMENDS:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'nxpiw612-sdio', 'kernel-module-nxp-wlan', '', d)}"
 MACHINE_EXTRA_RRECOMMENDS:append = "${MACHINE_FIRMWARE}"
