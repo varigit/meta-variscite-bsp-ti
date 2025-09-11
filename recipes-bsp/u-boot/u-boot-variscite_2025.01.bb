@@ -21,7 +21,7 @@ do_deploy:append() {
     fi
 }
 
-python do_patch:var-som-secureboot:append() {
+python do_patch:append:var-som-secureboot() {
     # This needs to be a Python function and not a bash function because we
     # want to execute it for both Cortex A53 and Cortex R5 (multiconfig, mc).
     # For the mc execution, we do not get full visibility of Yocto environment, e.g.
