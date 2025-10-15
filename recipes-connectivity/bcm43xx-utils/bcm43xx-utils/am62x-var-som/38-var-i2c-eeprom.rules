@@ -1,0 +1,3 @@
+# MAIN_I2C3 is used for reading data from Variscite EEPROM
+
+SUBSYSTEM=="i2c-dev", KERNEL=="i2c-[0-9]*", ENV{DEVPATH}=="*/20030000.i2c/*", SYMLINK+="i2c-var-eeprom"

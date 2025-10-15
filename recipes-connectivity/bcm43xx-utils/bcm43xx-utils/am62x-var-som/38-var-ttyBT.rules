@@ -1,0 +1,2 @@
+# MAIN_UART5 is used for Bluetooth on VAR-SOM-AM62x
+SUBSYSTEM=="tty", KERNEL=="ttyS[0-9]*", ENV{DEVPATH}=="*/2850000.serial/*", SYMLINK+="ttyBT"
