@@ -63,26 +63,26 @@ wifi_up()
 	wifi_mmc_unbind
 
 	# WIFI_3V3 up
-	gpioset ${WIFI_3V3_GPIO}=1
+	gpioset -t 0 --chip ${WIFI_3V3_GPIO}=1
 	sleep 0.01
 
 	# WLAN_EN up
-	gpioset ${WIFI_EN_GPIO}=1
+	gpioset -t 0 --chip ${WIFI_EN_GPIO}=1
 
 	# BT_EN up
-	gpioset ${BT_EN_GPIO}=1
+	gpioset -t 0 --chip ${BT_EN_GPIO}=1
 
 	# BT_BUF up
-	gpioset ${BT_BUF_GPIO}=0
+	gpioset -t 0 --chip ${BT_BUF_GPIO}=0
 
 	# Wait at least 150ms
 	sleep 0.2
 
 	# BT_BUF down
-	gpioset ${BT_BUF_GPIO}=1
+	gpioset -t 0 --chip ${BT_BUF_GPIO}=1
 
 	# BT_EN down
-	gpioset ${BT_EN_GPIO}=0
+	gpioset -t 0 --chip ${BT_EN_GPIO}=0
 
 	# Bind WIFI device to MMC controller
 	wifi_mmc_bind
@@ -101,24 +101,24 @@ wifi_down()
 	wifi_mmc_unbind
 
 	# WIFI_EN down
-	gpioset ${WIFI_EN_GPIO}=0
+	gpioset -t 0 --chip ${WIFI_EN_GPIO}=0
 
 	# BT_BUF down
-	gpioset ${BT_BUF_GPIO}=1
+	gpioset -t -0 --chip ${BT_BUF_GPIO}=1
 
 	# BT_EN down
-	gpioset ${BT_EN_GPIO}=0
+	gpioset -t 0 --chip ${BT_EN_GPIO}=0
 	sleep 0.01
 
 	# WIFI_3V3 down
-	gpioset ${WIFI_3V3_GPIO}=0
+	gpioset -t --chip ${WIFI_3V3_GPIO}=0
 }
 
 # Return true if SOM has WIFI module assembled
 wifi_is_available()
 {
 	# Read SOM options EEPROM field
-	opt=$(i2cget -f -y 0x3 0x50 0x20)
+	opt=$(i2cget -f -y /dev/i2c-var-eeprom 0x50 0x20)
 
 	# Check WIFI bit in SOM options
 	if [ $((opt & 0x1)) -eq 1 ]; then

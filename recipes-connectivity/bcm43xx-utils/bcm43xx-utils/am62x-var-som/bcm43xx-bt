@@ -16,7 +16,7 @@ BT_EN_GPIO="${main_gpio0} 60"
 BT_BUF_GPIO="${main_gpio0} 53"
 
 # UART device connected to BT module
-BT_TTY_DEV=/dev/ttyS5
+BT_TTY_DEV=/dev/ttyBT
 
 # Sterling LWB BT firmware
 BT_FIRMWARE_LWB=/lib/firmware/brcm/BCM43430A1.hcd
@@ -60,12 +60,12 @@ bt_found()
 bt_enable()
 {
 	# Power up BT module
-	gpioset ${BT_EN_GPIO}=0
+	gpioset -t 0 --chip ${BT_EN_GPIO}=0
 	sleep 1
-	gpioset ${BT_EN_GPIO}=1
+	gpioset -t 0 --chip ${BT_EN_GPIO}=1
 
 	# Route UART lines to BT module
-	gpioset ${BT_BUF_GPIO}=0
+	gpioset -t 0 --chip ${BT_BUF_GPIO}=0
 }
 
 # Start BT hardware
@@ -93,6 +93,7 @@ bt_start()
 			--enable_hci \
 			--no2bytes \
 			--baudrate 3000000 \
+			--use_baudrate_for_download \
 			--scopcm=1,0,0,0,0,0,0,0,0,0 \
 			--tosleep 1000 ${BT_TTY_DEV} &
 }
@@ -110,10 +111,10 @@ bt_stop()
 	kill -9 $(pidof brcm_patchram_plus) 2>/dev/null || true
 
 	# Route UART lines to SOM connector
-	gpioset ${BT_BUF_GPIO}=1
+	gpioset -t 0 --chip ${BT_BUF_GPIO}=1
 
 	# Power down BT module
-	gpioset ${BT_EN_GPIO}=0
+	gpioset -t 0 --chip ${BT_EN_GPIO}=0
 }
 
 ###########################
