@@ -1,0 +1,111 @@
+From e4cd75811148a7da557ed31b869c3a3ab6ed847a Mon Sep 17 00:00:00 2001
+From: Matthias Proske <matthias.p@variscite.com>
+Date: Thu, 16 Oct 2025 00:44:54 +0200
+Subject: [PATCH] allow a device node as a parameter
+
+Currently i2cget allows the following choice of parameters to identify
+an I2C device:
+
+- I2C number X, which will be either /dev/i2cX or /dev/i2c-X
+- a bus name which is determined with some magic from sysfs
+
+There is no option to directly select a device node, e.g.
+/dev/i2c-eeprom, a name that might have been created by a udev rule to
+identify a specific I2C device.
+
+This patch adds the option to select a device node directly. The new
+logic is basically
+
+If paramater is a number -> I2C number (as before)
+If parameter starts with '/' -> path to device node (NEW)
+Else -> it is a bus name, use sysfs to determine number (as before)
+
+Upstream-Status: Pending
+
+Signed-off-by: Matthias Proske <matthias.p@variscite.com>
+---
+ tools/i2cbusses.c | 17 +++++++++++++++++
+ tools/i2cget.c    | 21 ++++++++++++++++-----
+ 2 files changed, 33 insertions(+), 5 deletions(-)
+
+diff --git a/tools/i2cbusses.c b/tools/i2cbusses.c
+index d23ee7a..6802aed 100644
+--- a/tools/i2cbusses.c
++++ b/tools/i2cbusses.c
+@@ -415,6 +415,23 @@ int parse_i2c_address(const char *address_arg, int all_addrs)
+ 	return address;
+ }
+ 
++int open_i2c_dev_from_file(const char *filename, int quiet)
++{
++	int file;
++	file = open(filename, O_RDWR);
++
++	if (file < 0 && (errno == ENOENT || errno == ENOTDIR)) {
++		if (file < 0 && !quiet) {
++			fprintf(stderr, "Error: Could not open file "
++					"%s: %s\n", filename,
++					strerror(errno));
++			if (errno == EACCES)
++				fprintf(stderr, "Run as root?\n");
++		}
++	}
++	return file;
++}
++
+ int open_i2c_dev(int i2cbus, char *filename, size_t size, int quiet)
+ {
+ 	int file, len;
+diff --git a/tools/i2cget.c b/tools/i2cget.c
+index 38bd44a..a003eb5 100644
+--- a/tools/i2cget.c
++++ b/tools/i2cget.c
+@@ -42,7 +42,7 @@ static void help(void)
+ {
+ 	fprintf(stderr,
+ 		"Usage: i2cget [-f] [-y] [-a] I2CBUS CHIP-ADDRESS [DATA-ADDRESS [MODE [LENGTH]]]\n"
+-		"  I2CBUS is an integer or an I2C bus name\n"
++		"  I2CBUS is an integer, an I2C bus name or an I2C device\n"
+ 		"  ADDRESS is an integer (0x08 - 0x77, or 0x00 - 0x7f if -a is given)\n"
+ 		"  MODE is one of:\n"
+ 		"    b (read byte data, default)\n"
+@@ -178,6 +178,7 @@ int main(int argc, char *argv[])
+ 	char *end;
+ 	int res, i2cbus, address, size, file;
+ 	int daddress;
++	char *dev_ptr;
+ 	char filename[20];
+ 	int pec = 0;
+ 	int flags = 0;
+@@ -209,9 +210,12 @@ int main(int argc, char *argv[])
+ 	if (argc < flags + 3)
+ 		help();
+ 
+-	i2cbus = lookup_i2c_bus(argv[flags+1]);
+-	if (i2cbus < 0)
+-		help();
++	dev_ptr = argv[flags+1];
++	if(dev_ptr[0] != '/') {	    // use-case I2C name or number given
++		i2cbus = lookup_i2c_bus(argv[flags+1]);
++		if (i2cbus < 0)
++			help();
++	}
+ 
+ 	address = parse_i2c_address(argv[flags+2], all_addrs);
+ 	if (address < 0)
+@@ -261,7 +265,14 @@ int main(int argc, char *argv[])
+ 		length = I2C_SMBUS_BLOCK_MAX;
+ 	}
+ 
+-	file = open_i2c_dev(i2cbus, filename, sizeof(filename), 0);
++	if (dev_ptr[0] == '/') {    // use-case I2C device path given
++		file = open_i2c_dev_from_file(dev_ptr, 0);
++		strncpy(filename, dev_ptr, sizeof(filename));
++		filename[sizeof(filename)-1] = '\0';
++	} else {
++		file = open_i2c_dev(i2cbus, filename, sizeof(filename), 0);
++	}
++
+ 	if (file < 0
+ 	 || check_funcs(file, size, daddress, pec)
+ 	 || set_slave_addr(file, address, force))
