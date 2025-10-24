@@ -117,6 +117,14 @@ wifi_down()
 # Return true if SOM has WIFI module assembled
 wifi_is_available()
 {
+	for i in $(seq 1 10); do
+		if [ -e /dev/i2c-var-eeprom ]; then
+			break
+		fi
+		echo "I2C EEPROM not yet available, trying again..."
+		sleep 1
+	done
+
 	# Read SOM options EEPROM field
 	opt=$(i2cget -f -y /dev/i2c-var-eeprom 0x50 0x20)
 
