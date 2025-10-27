@@ -68,3 +68,6 @@ CORE_IMAGE_EXTRA_INSTALL += " \
 "
 
 BBMASK += "meta-tisdk/meta-ti-foundational/recipes-tisdk/tisdk-uenv/tisdk-uenv.bbappend"
+
+# don't allow commercial licenses from Arago Distribution
+LICENSE_FLAGS_ACCEPTED:remove = "commercial_ffmpeg commercial_gstreamer1.0-libav"
