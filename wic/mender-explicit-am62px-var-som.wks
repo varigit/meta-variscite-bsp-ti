@@ -1,0 +1,11 @@
+# short-description: Create SD card image with boot, dual rootfs, and data partitions
+# long-description: Partitioned SD card image for Variscite TI based platforms with
+# a dedicated /boot, dual rootfs layout for Mender, and a user data partition.
+# Boot files are located in the first vfat partition with extra reserved space.
+# Rootfs A starts at offset 44M to allow room for U-Boot environment.
+
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 1024 --fixed-size 40M --use-uuid
+part --source rawcopy --sourceparams="file=uboot.env" --ondisk mmcblk0 --align 44032 --no-table
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label root --align 1024 --use-uuid --offset 44M --fixed-size 2304M
+part / --ondisk mmcblk0 --fstype=ext4 --label rootb --align 1024 --use-uuid --fixed-size 2304M
+part /data --source rootfs --change-directory=data --ondisk mmcblk0 --fstype=ext4 --label data --align 1024 --use-uuid --fixed-size 128M
