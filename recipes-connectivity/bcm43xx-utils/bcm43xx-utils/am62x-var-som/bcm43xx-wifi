@@ -111,7 +111,7 @@ wifi_down()
 	sleep 0.01
 
 	# WIFI_3V3 down
-	gpioset -t --chip ${WIFI_3V3_GPIO}=0
+	gpioset -t 0 --chip ${WIFI_3V3_GPIO}=0
 }
 
 # Return true if SOM has WIFI module assembled
