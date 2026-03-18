@@ -20,6 +20,8 @@ CM_DEMOS = " \
 # Cortex-M4 / Cortex-R5 CPUs
 CM_CPU:am62x-var-som="m4fss0-0"
 CM_CPU:am62px-var-som="mcu-r5fss0-0"
+CM_DEMO_SYM_LNK:am62x-var-som="am62-mcu-m4f0_0-fw"
+CM_DEMO_SYM_LNK:am62px-var-som="am62p-mcu-r5f0_0-fw"
 
 do_compile() {
     # Build all demos in CM_DEMOS
@@ -40,6 +42,11 @@ do_install() {
         FILE_CM_FW="$(basename ${DIR_ARMCLANG}/*.release.strip.out)"
         install -m 644 ${DIR_ARMCLANG}/${FILE_CM_FW} ${D}${nonarch_base_libdir}/firmware/ti-ipc/${FILE_CM_FW}
     done
+
+    # The first demo in the CM_DEMOS is linked to CM_DEMO_SYM_LNK to be started automatically by remoteproc
+    CM_DEMO_AUTO_START=${@d.getVar('CM_DEMOS').split()[0]}
+    CM_BIN_AUTO_START="$(basename ${S}/examples/${CM_DEMO_AUTO_START}/${MACHINE}/${CM_CPU}_freertos/ti-arm-clang/*.release.strip.out)"
+    ln -sf "${nonarch_base_libdir}/firmware/ti-ipc/${CM_BIN_AUTO_START}" ${D}/${nonarch_base_libdir}/firmware/${CM_DEMO_SYM_LNK}
 }
 
 FILES:${PN} = " \
