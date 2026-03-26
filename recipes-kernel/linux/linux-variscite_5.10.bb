@@ -26,7 +26,7 @@ PV = "5.10.168+git${SRCPV}"
 KBUILD_DEFCONFIG = "am62x_var_defconfig"
 
 BRANCH:am335x-var-som = "ti-linux-5.10.y_08.02.00.006_var01"
-SRCREV:am335x-var-som = "1b02ed84b997e9ebddcdcc0cc1f9f09414d3ae3c"
+SRCREV:am335x-var-som = "feef8fc062ae9a5b4614b9ff642168a00fa8ff0e"
 PV:am335x-var-som = "5.10.100+git${SRCPV}"
 KBUILD_DEFCONFIG:am335x-var-som = "am335x_var_defconfig"
 
