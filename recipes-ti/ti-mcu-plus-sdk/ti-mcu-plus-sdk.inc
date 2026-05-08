@@ -4,7 +4,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/BSD-3-Clause;md5=550794465ba0ec5312d6919e203a55f9"
 SECTION = "BSP"
 
-DEPENDS = "ti-cgt-armllvm openssl-native"
+DEPENDS = "ti-cgt-armllvm openssl-native sysconfig"
 
 S = "${WORKDIR}/git"
 
@@ -24,11 +24,15 @@ CM_DEMO_SYM_LNK:am62x-var-som="am62-mcu-m4f0_0-fw"
 CM_DEMO_SYM_LNK:am62px-var-som="am62p-mcu-r5f0_0-fw"
 
 do_compile() {
+    TOOLS_PATH="${RECIPE_SYSROOT_NATIVE}${bindir}/arm32-oe-linux"
+    SYSCFG_PATH="${RECIPE_SYSROOT_NATIVE}${bindir}/arm32-oe-linux/sysconfig"
+    CGT_TI_ARM_CLANG_PATH="$(echo ${RECIPE_SYSROOT_NATIVE}${bindir}/arm32-oe-linux/ti-cgt-armllvm_*)"
+
     # Build all demos in CM_DEMOS
     for CM_DEMO in ${CM_DEMOS}; do
         export PROJDIR="examples/${CM_DEMO}/${MACHINE}/${CM_CPU}_freertos/ti-arm-clang"
-        oe_runmake -C ${PROJDIR} clean
-        oe_runmake -C ${PROJDIR}
+        oe_runmake -C ${PROJDIR} TOOLS_PATH="${TOOLS_PATH}" SYSCFG_PATH="${SYSCFG_PATH}" CGT_TI_ARM_CLANG_PATH="${CGT_TI_ARM_CLANG_PATH}" clean
+        oe_runmake -C ${PROJDIR} TOOLS_PATH="${TOOLS_PATH}" SYSCFG_PATH="${SYSCFG_PATH}" CGT_TI_ARM_CLANG_PATH="${CGT_TI_ARM_CLANG_PATH}"
     done
 }
 
