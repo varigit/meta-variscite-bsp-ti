@@ -18,7 +18,7 @@ KERNEL_EXTRA_ARGS += "LOADADDR=${UBOOT_ENTRYPOINT} \
 S = "${WORKDIR}/git"
 
 BRANCH = "ti-linux-6.12.y_11.00.09.04_var01"
-SRCREV = "0a27dae8c32a0323317479fad02ebe72b2bca03e"
+SRCREV = "b51580a94d652fac03f0d3fd03b671cdf4c10073"
 PV = "6.12.17+git"
 KBUILD_DEFCONFIG = "am62x_var_defconfig"
 
