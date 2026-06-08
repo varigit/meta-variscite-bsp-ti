@@ -6,6 +6,6 @@
 
 part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 1024 --fixed-size 40M --use-uuid
 part --source rawcopy --sourceparams="file=uboot.env" --ondisk mmcblk0 --align 44032 --no-table
-part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label root --align 1024 --use-uuid --offset 44M --fixed-size 2304M
-part / --ondisk mmcblk0 --fstype=ext4 --label rootb --align 1024 --use-uuid --fixed-size 2304M
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label root --align 1024 --use-uuid --offset 44M --fixed-size 2688M
+part / --ondisk mmcblk0 --fstype=ext4 --label rootb --align 1024 --use-uuid --fixed-size 2688M
 part /data --source rootfs --change-directory=data --ondisk mmcblk0 --fstype=ext4 --label data --align 1024 --use-uuid --fixed-size 128M

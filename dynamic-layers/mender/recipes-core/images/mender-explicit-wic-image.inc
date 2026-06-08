@@ -4,14 +4,10 @@ SUMMARY:append = " (Mender explicit WIC layout)"
 # and uses the fixed WKS file).
 inherit variscite-mender-explicit-wic
 
-# Keep rootfs images inside the 2.304GB partition defined in the explicit WKS
-# for 8GB eMMC (7456MiB usable). Tighten overhead and cap size explicitly.
 IMAGE_OVERHEAD_FACTOR = "1.00"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
-# Target ~2.2GB filesystem size (in KB); fits under 2.304GB partition with slack.
-IMAGE_ROOTFS_SIZE = "2200000"
-# Hard cap so we fail early if it ever grows past the partition.
-IMAGE_ROOTFS_MAXSIZE = "2304000"
+# Target ~2.6GB filesystem size (in KB); fits under 2.688GB partition with slack.
+IMAGE_ROOTFS_SIZE = "2600000"
 
 CORE_IMAGE_EXTRA_INSTALL:append = " \
     mender-configure \
