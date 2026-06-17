@@ -9,7 +9,7 @@ SRC_URI += "file://fw_env.config"
 UBOOT_GIT_URI = "git://github.com/varigit/ti-u-boot"
 BRANCH = "ti-u-boot-2025.01_11.02.08.02_var01"
 
-SRCREV = "265ddb3845079d4a50514890ec0e1d9e9cb3623c"
+SRCREV = "b3c41f01928e6438a17ff6bf7bcdd863b98f1194"
 
 COMPATIBLE_MACHINE = "(am62x-var-som|am62px-var-som)"
 
