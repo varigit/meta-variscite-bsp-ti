@@ -16,6 +16,9 @@ BT_EN_GPIO="${main_gpio0} 60"
 # btnxpuart fdt device compatible file
 BT_FDT="/sys/firmware/devicetree/base/bus@f0000/serial@2850000/bluetooth_iw61x"
 
+# BT UART
+BT_UART="/sys/bus/platform/devices/2850000.serial/"
+
 # Use btnxpuart device node to determine if wifi module is iw61x
 fdt_has_btnxpuart() {
 	# Check if compatible file exists
@@ -41,6 +44,26 @@ fdt_has_btnxpuart() {
 	return 0
 }
 
+# deactivate UART power-saving.
+# There is a known bug in the omap8250 driver that can cause a crash
+# as we sleep during the resume while a spinlock is held.
+# Call this to deactivate UART power-saving, preventing the
+# bug from occuring.
+uart_deactivate_power_save()
+{
+	echo on > "$BT_UART"/power/control
+}
+
+# activate UART power-saving
+# Call this to activate UART power-saving. Do this when it
+# is certain that there will be no BT UART operations, e.g.
+# during suspend when BT is already deactivated. This will
+# allow the suspend process to also suspend the BT UART.
+uart_activate_power_save()
+{
+	echo auto > "$BT_UART"/power/control
+}
+
 # Enable BT via GPIO(s)
 bt_enable()
 {
@@ -56,6 +79,11 @@ bt_start()
 {
 	# Exit if BT module is not iw612 according to the device tree
 	fdt_has_btnxpuart || exit 0
+
+	# always deactivate UART power-saving. User-space might do BT
+	# enabling, and we want to make sure that the underlying bug
+	# is not triggered
+	uart_deactivate_power_save
 
 	# Exit if BT interface is already running
 	if [ -e "/sys/class/bluetooth/hci0" ]; then
@@ -109,6 +137,9 @@ bt_stop()
 	modprobe -r btnxpuart
 
 	gpioset -t 0 --chip ${BT_EN_GPIO}=0
+
+	# when all other operations are done, restore power-saving for BT UART
+	uart_activate_power_save
 }
 
 # Issue in-band reset using hci interface
