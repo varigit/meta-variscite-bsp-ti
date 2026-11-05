@@ -1,3 +1,4 @@
+require variscite-mirrors.inc
 INHERIT += "image-buildinfo"
 USE_VT = "0"
 
