@@ -104,7 +104,7 @@ wifi_down()
 	gpioset -t 0 --chip ${WIFI_EN_GPIO}=0
 
 	# BT_BUF down
-	gpioset -t -0 --chip ${BT_BUF_GPIO}=1
+	gpioset -t 0 --chip ${BT_BUF_GPIO}=1
 
 	# BT_EN down
 	gpioset -t 0 --chip ${BT_EN_GPIO}=0
