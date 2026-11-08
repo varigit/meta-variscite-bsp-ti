@@ -117,16 +117,25 @@ wifi_down()
 # Return true if SOM has WIFI module assembled
 wifi_is_available()
 {
-	for i in $(seq 1 10); do
-		if [ -e /dev/i2c-var-eeprom ]; then
+	I2C_CONTROLLER="20030000.i2c"	# for EEPROM
+	for bus in /sys/bus/i2c/devices/i2c-*; do
+		target=$(readlink -f "$bus")
+
+		case "$target" in
+			*/"$I2C_CONTROLLER"/i2c-*)
+				I2C_BUS=${bus##*-}
 			break
-		fi
-		echo "I2C EEPROM not yet available, trying again..."
-		sleep 1
+				;;
+		esac
 	done
 
+	if [ -z "$I2C_BUS" ]; then
+		echo "Could not find I2C controller $I2C_CONTROLLER" >&2
+		exit 1
+	fi
+
 	# Read SOM options EEPROM field
-	opt=$(i2cget -f -y /dev/i2c-var-eeprom 0x50 0x20)
+	opt=$(i2cget -f -y "$I2C_BUS" 0x50 0x20)
 
 	# Check WIFI bit in SOM options
 	if [ $((opt & 0x1)) -eq 1 ]; then
