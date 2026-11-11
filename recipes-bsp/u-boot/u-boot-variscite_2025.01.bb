@@ -15,10 +15,8 @@ COMPATIBLE_MACHINE = "(am62x-var-som|am62px-var-som)"
 
 inherit var-check-keydir
 
-do_deploy:append() {
-    if [ -L ${DEPLOY_DIR_IMAGE}/fw_env.config ]; then
-        rm ${DEPLOY_DIR_IMAGE}/fw_env.config
-    fi
+do_deploy:append:k3r5() {
+    rm -f ${DEPLOYDIR}/fw_env.config
 }
 
 python do_patch:append:var-som-secureboot() {
